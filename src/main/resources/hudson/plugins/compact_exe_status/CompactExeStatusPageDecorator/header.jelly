@@ -1,0 +1,30 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <script>
+    function compactifyExeStatus() {
+      var items = $H();
+
+      $$('#executors>tbody>tr').each(function(el) {
+        if(el.children.length > 2 &amp;&amp;
+            el.children[0].innerHTML != '') {
+          var h = el.children[1].innerHTML;
+          var it = items.get(h);
+          if(it === undefined) {
+            items.set(h, {el: el, count: 1});
+            el.children[0].innerHTML = 1;
+          } else {
+            it.count = it.count+1;
+            it.el.children[0].innerHTML = it.count;
+            el.hide();
+          }
+        } else {
+          items = $H();
+          if (el.children[0].innerHTML == '#')
+            el.children[0].innerHTML = 'N';
+        }
+      });
+    }
+
+    layoutUpdateCallback.add(compactifyExeStatus);
+  </script>
+</j:jelly>
